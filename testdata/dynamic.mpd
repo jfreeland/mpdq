@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" profiles="urn:mpeg:dash:profile:isoff-live:2011" type="dynamic" minBufferTime="PT4.096S" availabilityStartTime="2020-12-25T01:20:03Z" minimumUpdatePeriod="PT8.000S" publishTime="2020-12-25T05:20:09Z" timeShiftBufferDepth="PT180.000S" suggestedPresentationDelay="PT12.288S">
+  <Location>https://content-ause2-up-1.uplynk.com/channel/eef84c409b0f4a548a14c1b8c05a31d8.mpd?exp=1608873699&amp;ct=c&amp;cid=eef84c409b0f4a548a14c1b8c05a31d8&amp;expand=wv&amp;manifest=mpd&amp;nielsen=1&amp;dash_ensure_encrypted_content_start=1&amp;iph=dcba05306351f03c61dc4c98dd4e45ab385f130d9eeedbeb09167d34c29dec00&amp;euid=569DD088-8933-4F7F-CFC9-E726AC088656_108_1_001_live_01-06-00_1.2.6.11&amp;cdn=ec&amp;stgcfg=datg&amp;resolutions=0-720&amp;pp2ip=0&amp;delay=0&amp;v=3&amp;drm_policy_name=dtci_drm_hdcp&amp;sig=6de263b89c2d1b769ef34948094a61ce4593c0fbefd8b5bcfbba3a20f816e142&amp;pbs=8023888ba2e242d9b20a3728acaf8fe8</Location>
+  <Period id="14372.864000" start="PT3H59M32.864S">
+    <AdaptationSet audioSamplingRate="48000" mimeType="audio/mp4" startWithSAP="1" segmentAlignment="true" lang="en" group="1" contentType="audio">
+      <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="3b3b3fad-80c7-45c4-b77e-6c95b9b2d9ac" value="cenc"></ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:">
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:" value="MSPR 3.0">
+        <mspr:pro></mspr:pro>
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main"></Role>
+      <Representation bandwidth="129320" codecs="mp4a.40.5" id="v0">
+        <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="2"></AudioChannelConfiguration>
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/TK_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="TK_$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" id="1" segmentAlignment="true" maxWidth="960" maxHeight="540" contentType="video">
+      <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="3b3b3fad-80c7-45c4-b77e-6c95b9b2d9ac" value="cenc"></ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:">
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:" value="MSPR 3.0">
+        <mspr:pro></mspr:pro>
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:adaptation-set-switching:2016" value="2"></SupplementalProperty>
+      <Representation scanType="progressive" bandwidth="1489887" codecs="avc1.4d001f" frameRate="30.0" height="540" id="D" width="960">
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/$RepresentationID$_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="$RepresentationID$$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+      <Representation scanType="progressive" bandwidth="142696" codecs="avc1.4d000c" frameRate="15.0" height="144" id="A" width="256">
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/$RepresentationID$_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="$RepresentationID$$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+      <Representation scanType="progressive" bandwidth="307633" codecs="avc1.4d000d" frameRate="30.0" height="234" id="B" width="416">
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/$RepresentationID$_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="$RepresentationID$$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+      <Representation scanType="progressive" bandwidth="607135" codecs="avc1.4d001e" frameRate="30.0" height="360" id="C" width="640">
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/$RepresentationID$_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="$RepresentationID$$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+      <Accessibility schemeIdUri="urn:scte:dash:cc:cea-608:2015"></Accessibility>
+    </AdaptationSet>
+    <AdaptationSet mimeType="video/mp4" startWithSAP="1" id="2" segmentAlignment="true" maxWidth="1280" maxHeight="720" contentType="video">
+      <ContentProtection schemeIdUri="urn:mpeg:dash:mp4protection:2011" cenc:default_KID="3690500c-0599-41e1-985c-51376847d64c" value="cenc"></ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:">
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <ContentProtection schemeIdUri="urn:uuid:" value="MSPR 3.0">
+        <mspr:pro></mspr:pro>
+        <cenc:pssh></cenc:pssh>
+      </ContentProtection>
+      <SupplementalProperty schemeIdUri="urn:mpeg:dash:adaptation-set-switching:2016" value="1"></SupplementalProperty>
+      <Representation scanType="progressive" bandwidth="2359565" codecs="avc1.64001f" frameRate="30.0" height="720" id="E" width="1280">
+        <BaseURL>https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/</BaseURL>
+        <SegmentTemplate presentationTimeOffset="1293557670" initialization="https://x-default-stgec.uplynk.com/auso/slices/909/faa5ce0438a4431b81e4c12e81bc8153/9099d1d4a2f644bc9ccbb1c1a5bc3983/$RepresentationID$_init.mp4?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" media="$RepresentationID$$Number%08d$.m4f?pbs=8023888ba2e242d9b20a3728acaf8fe8&amp;_jt=l&amp;chid=eef84c409b0f4a548a14c1b8c05a31d8&amp;drm=1&amp;cloud=aws" startNumber="3509" timescale="90000">
+          <SegmentTimeline>
+            <S t="1293557670" d="368640" r="7"></S>
+          </SegmentTimeline>
+        </SegmentTemplate>
+      </Representation>
+      <Accessibility schemeIdUri="urn:scte:dash:cc:cea-608:2015"></Accessibility>
+    </AdaptationSet>
+  </Period>
+  <UTCTiming schemeIdUri="urn:mpeg:dash:utc:http-iso:2014" value="https://content-ause2-up-1.uplynk.com/misc/utcservertime"></UTCTiming>
+</MPD>
