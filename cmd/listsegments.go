@@ -12,7 +12,7 @@ var (
 
 // listSegmentsCmd represents the playback command
 var listSegmentsCmd = &cobra.Command{
-	Use:     "listrepresentations",
+	Use:     "listsegments",
 	Aliases: []string{"ls", "s"},
 	Short:   "Lists segments for a manifest",
 	Long:    "Lists segments for a manifest",
