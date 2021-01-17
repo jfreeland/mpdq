@@ -128,7 +128,7 @@ func getTable() *tablewriter.Table {
 }
 
 func getUpdatePeriod(manifestUpdatePeriod *string) time.Duration {
-	re := regexp.MustCompile(`PT(\d)S`)
+	re := regexp.MustCompile(`PT(\d+)S`)
 	minUpdatePeriodMatch := re.FindStringSubmatch(*manifestUpdatePeriod)
 	minUpdatePeriod, err := strconv.Atoi(minUpdatePeriodMatch[1])
 	if err != nil {
@@ -153,6 +153,30 @@ func checkForGap(t *tablewriter.Table, pidx int, periodID string, timeBetweenPer
 		return gapSegment, true
 	}
 	return segment{}, false
+}
+
+func checkPeriodsSameDuration(manifest *mpd.MPD) (int, bool) {
+	var (
+		durations  []int
+		startTimes []time.Time
+	)
+	availabilityStartTime := getAvailabilityStartTime(*manifest.AvailabilityStartTime)
+	for _, period := range manifest.Periods {
+		periodStartTime := availabilityStartTime.Add(time.Duration(*period.Start))
+		startTimes = append(startTimes, periodStartTime)
+	}
+	for i := 0; i < len(startTimes)-1; i++ {
+		duration := int(startTimes[i].Sub(startTimes[i+1]).Seconds()) * -1
+		durations = append(durations, duration)
+	}
+	totalSeconds := 0
+	for _, s := range durations {
+		totalSeconds += s
+	}
+	if totalSeconds/len(durations) == durations[0] {
+		return durations[0], true
+	}
+	return 0, false
 }
 
 func printHeader(t *tablewriter.Table) {

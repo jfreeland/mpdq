@@ -11,12 +11,12 @@ import (
 )
 
 // ListSegments lists the segments for a given representation
-func ListSegments(manifest *mpd.MPD, watch bool, mpdURL, representation, mpdBase string) {
+func ListSegments(manifest *mpd.MPD, watch bool, lastTime, mpdURL, representation, mpdBase string) {
 	r := getOneVideoRepresentation(manifest, representation)
 	if *manifest.Type == "dynamic" && !watch {
 		listDynamicSegments(manifest, r, mpdBase, true)
 	} else if *manifest.Type == "dynamic" && watch {
-		watchDynamicSegments(manifest, r, mpdURL)
+		watchDynamicSegments(manifest, r, mpdURL, lastTime)
 		//fmt.Println("forgot how to do this")
 	} else if *manifest.Type == "static" {
 		//listStaticSegments(manifest, r, mpdBase)
@@ -36,21 +36,23 @@ type segment struct {
 }
 
 type templateOptions struct {
-	pidx                                        int
-	period                                      *mpd.Period
-	rep                                         *mpd.Representation
-	mpdBase                                     string
-	now, availabilityStartTime, periodStartTime time.Time
-	previousSegmentEndTime                      *time.Time
-	sTemplate                                   *mpd.SegmentTemplate
+	pidx                                 int
+	period                               *mpd.Period
+	rep                                  *mpd.Representation
+	mpdBase                              string
+	now, availabilityStartTime           time.Time
+	nextPeriodStartTime, periodStartTime time.Time
+	previousSegmentEndTime               *time.Time
+	sTemplate                            *mpd.SegmentTemplate
 }
 
 func listDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string, print bool) []segment {
 	var (
-		previousSegmentEndTime      time.Time
-		timeBetweenPeriods          time.Duration
 		allSegments, periodSegments []segment
+		nextPeriodStartTime         time.Time
+		previousSegmentEndTime      time.Time
 		sTemplate                   *mpd.SegmentTemplate
+		timeBetweenPeriods          time.Duration
 	)
 	table := getTable()
 	if print {
@@ -64,11 +66,15 @@ func listDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string
 
 	for pidx, period := range manifest.Periods {
 		rowColor := getRowColor(pidx)
-		periodStart, err := mpd.ParseDuration(period.Start.String())
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
+		periodStartTime := availabilityStartTime.Add(time.Duration(*period.Start))
+		if len(manifest.Periods) > 1 && pidx < len(manifest.Periods)-1 {
+			nextPeriodStartTime = availabilityStartTime.Add(time.Duration(*manifest.Periods[pidx+1].Start))
+		} else if len(manifest.Periods) > 1 {
+			duration, ok := checkPeriodsSameDuration(manifest)
+			if ok {
+				nextPeriodStartTime = previousSegmentEndTime.Add(time.Duration(duration) * time.Second)
+			}
 		}
-		periodStartTime := availabilityStartTime.Add(periodStart)
 		if pidx != 0 {
 			timeBetweenPeriods = periodStartTime.Sub(previousSegmentEndTime)
 			gapSegment, gap := checkForGap(table, pidx, period.ID, timeBetweenPeriods, previousSegmentEndTime)
@@ -99,6 +105,7 @@ func listDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string
 						now:                    now,
 						availabilityStartTime:  availabilityStartTime,
 						periodStartTime:        periodStartTime,
+						nextPeriodStartTime:    nextPeriodStartTime,
 						previousSegmentEndTime: &previousSegmentEndTime,
 						sTemplate:              sTemplate,
 					})
@@ -173,21 +180,27 @@ func parseSegmentTemplateWithTimeline(opts templateOptions) []segment {
 // https://livesim.dashif.org/livesim/periods_20/testpic_2s/Manifest.mpd
 func parseSegmentTemplateNoTimeline(opts templateOptions) []segment {
 	var (
-		segNum   int
-		segments []segment
+		segNum    int
+		segments  []segment
+		untilTime time.Time
 	)
-	// TODO: We'll look back 60 seconds for now
-	currentTime := opts.now.Add(time.Duration(-60 * time.Second))
+	// TODO: We'll look back 300 seconds for now
+	if !opts.nextPeriodStartTime.IsZero() {
+		untilTime = opts.nextPeriodStartTime
+	} else {
+		untilTime = opts.now
+	}
+	currentTime := opts.periodStartTime
 
 	if int(*opts.sTemplate.StartNumber) != 0 {
 		segNum = int(*opts.sTemplate.StartNumber)
 	} else {
 		segNum = int(opts.now.Sub(opts.periodStartTime).Seconds()) / int(*opts.sTemplate.Duration)
 	}
-	for currentTime.Before(opts.now) {
+	for currentTime.Before(untilTime) {
 		path := cleanFilePath(opts.mpdBase, *opts.sTemplate.Media, *opts.rep.ID, int(segNum))
 		endTime := currentTime.Add(time.Duration(*opts.sTemplate.Duration) * time.Second)
-		*opts.previousSegmentEndTime = opts.periodStartTime.Add(time.Duration(*opts.sTemplate.Duration) * time.Second)
+		*opts.previousSegmentEndTime = endTime
 		durationColor := getDurationColor(0, 0, opts.pidx)
 		durationS := fmt.Sprintf("%vs", *opts.sTemplate.Duration)
 		segments = append(segments, segment{
@@ -207,8 +220,7 @@ func parseSegmentTemplateNoTimeline(opts templateOptions) []segment {
 }
 
 // TODO: Collapse this into listDynamicSegments and just pass the watch flag
-func watchDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdURL string) {
-	fmt.Println("watching last 5 minutes and moving forward")
+func watchDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdURL, lastTime string) {
 	table := getTable()
 	printHeader(table)
 
@@ -217,7 +229,11 @@ func watchDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdURL string
 	}
 	var segments []segment
 	mpdBase := getMPDBase(manifest.BaseURL, mpdURL)
-	start := time.Now().UTC().Add(time.Duration(-300) * time.Second)
+	lookBack, err := time.ParseDuration(lastTime)
+	if err != nil {
+		panic("don't understand the time value provided, try 30s or 5m")
+	}
+	start := time.Now().UTC().Add(lookBack * -1)
 	seen := make(map[string]bool)
 	updatePeriod := getUpdatePeriod(manifest.MinimumUpdatePeriod)
 

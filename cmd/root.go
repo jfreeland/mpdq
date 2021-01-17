@@ -22,7 +22,6 @@ var (
 	err            error
 	manifest       *mpd.MPD
 	representation string
-	watch          bool
 
 	mpdBase, mpdFile, mpdURL string
 )
