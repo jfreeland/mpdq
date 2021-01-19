@@ -9,7 +9,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/alecthomas/chroma/quick"
+	"github.com/jfreeland/mpdq/mpdqlib"
 	"github.com/spf13/cobra"
 	"github.com/zencoder/go-dash/mpd"
 )
@@ -34,14 +34,7 @@ var rootCmd = &cobra.Command{
 		getManifest()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		manifestString, err := manifest.WriteToString()
-		if err != nil {
-			log.Fatalf("could not print manifest string: %v\n", err)
-		}
-		err = quick.Highlight(os.Stdout, manifestString, "xml", "terminal16m", "pygments")
-		if err != nil {
-			log.Fatal(err)
-		}
+		mpdqlib.PrintManifest(manifest)
 	},
 }
 

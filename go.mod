@@ -4,10 +4,10 @@ go 1.15
 
 require (
 	github.com/alecthomas/chroma v0.8.2
-	github.com/antchfx/xmlquery v1.3.3
+	github.com/antchfx/xmlquery v1.3.3 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/fatih/color v1.10.0
-	github.com/go-xmlfmt/xmlfmt v0.0.0-20191208150333-d5b6f63a941b
+	github.com/go-xmlfmt/xmlfmt v0.0.0-20191208150333-d5b6f63a941b // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
 	github.com/spf13/cobra v1.1.1

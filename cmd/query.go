@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"log"
-	"strings"
 
 	"github.com/jfreeland/mpdq/mpdqlib"
 	"github.com/spf13/cobra"
@@ -18,12 +17,10 @@ var queryCmd = &cobra.Command{
 		if len(args) == 0 {
 			log.Fatal("did not receive a query")
 		}
-		q := strings.TrimSpace(args[0])
-		pieces := strings.Split(q, " ")
-		if len(pieces) != 3 {
-			log.Fatalf("expected '{name} {op} {value}' got %v", q)
+		if len(args) > 1 || args[0] == "" {
+			log.Fatalf("query must quoted and in the form of '{param} {operand} {value}'")
 		}
-		mpdqlib.Query(manifest, pieces[0], pieces[1], pieces[2])
+		mpdqlib.Query(manifest, args[0])
 	},
 }
 

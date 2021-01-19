@@ -12,9 +12,22 @@ import (
 	"strings"
 	"time"
 
+	"github.com/alecthomas/chroma/quick"
 	"github.com/olekukonko/tablewriter"
 	"github.com/zencoder/go-dash/mpd"
 )
+
+// PrintManifest pretty prints the manifest with color
+func PrintManifest(manifest *mpd.MPD) {
+	manifestString, err := manifest.WriteToString()
+	if err != nil {
+		log.Fatalf("could not print manifest string: %v\n", err)
+	}
+	err = quick.Highlight(os.Stdout, manifestString, "xml", "terminal16m", "pygments")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 // TODO: Return an err if we can't find the requested representation.
 func getOneVideoRepresentation(manifest *mpd.MPD, representation string) ListRepresentation {
