@@ -1,8 +1,14 @@
 # mpdq
 
+## If you installed prior to January 16
+
+Please `rm -rf $GO_SRC_DIR/github.com/jfreeland/mpdq` and reinstall. I'm a moron and thought I'd clean up after myself and rewrite my history to clean up some of my nastiness, not realizing it would break updating. That won't happen again. The history of my nasty code will live on.
+
 ## NOTE
 
 **This is very much a work in progress.**
+
+But the key features I wanted work now. 😂
 
 This was primarily intended to be used by me as an easier way to interact with "dynamic" MPEG-DASH manifests, as used with LIVE streaming video. It scratches my itch for now but I'll probably continue to clean it up and add functionality over time.
 
@@ -12,6 +18,10 @@ For the time being I've removed all support for static manifests as I don't deal
 
 ```sh
 go install github.com/jfreeland/mpdq
+
+or
+
+go get -u github.com/jfreeland/mpdq
 ```
 
 ## Usage
