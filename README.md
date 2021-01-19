@@ -1,13 +1,12 @@
 # mpdq
 
-## TODO
+## NOTE
 
-This is garbage and very much a work in progress. It was very much intended for a specific use case and solves that well enough for now.
+**This is very much a work in progress.**
 
-Notes to self:
+This was primarily intended to be used by me as an easier way to interact with "dynamic" MPEG-DASH manifests, as used with LIVE streaming video. It scratches my itch for now but I'll probably continue to clean it up and add functionality over time.
 
-- https://github.com/cbsinteractive/bakery/blob/master/filters/dash.go
-- test with dynamic and static assets from https://testassets.dashif.org/#testvector/list
+For the time being I've removed all support for static manifests as I don't deal with video on demand much. Perhaps I'll add that back in later.
 
 ## Installation
 
@@ -98,6 +97,7 @@ cat testdata/dynamic.mpd | sed -E "s/"$'\E'"\[([0-9]{1,3}((;[0-9]{1,3})*)?)?[m|K
 ## Manifests to test against
 
 ```sh
+https://testassets.dashif.org/#testvector/list
 https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd
 https://livesim.dashif.org/livesim/start_1800/testpic_2s/Manifest.mpd
 https://livesim.dashif.org/livesim/scte35_2/testpic_2s/Manifest.mpd
