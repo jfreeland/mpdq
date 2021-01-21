@@ -22,12 +22,13 @@ archives:
     format: tar.xz
     name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}"
 brews:
-  - tap:
-    owner: jfreeland
-    name: mpdq
-  folder: Formula
-  homepage: https://github.com/jfreeland/mpdq
-  description: "A cli tool to parse MPEG-DASH manifests"
+  - name: mpdq
+    tap:
+      owner: jfreeland
+      name: mpdq
+    folder: Formula
+    homepage: https://github.com/jfreeland/mpdq
+    description: "A cli tool to parse MPEG-DASH manifests"
 checksum:
   disable: true
 changelog:
