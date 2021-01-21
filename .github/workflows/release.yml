@@ -1,10 +1,8 @@
 name: release
+
 on:
   push:
     tags: [ "v*.[0-99]" ] # only a valid semver tag
-
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   goreleaser:
@@ -23,3 +21,5 @@ jobs:
         with:
           version: latest
           args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.HOMEBREW_TOKEN }}

@@ -38,8 +38,9 @@ builds:
       - -s -w
 
 archives:
-  - name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  - name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     replacements:
+      386: i386
       darwin: macos
       amd64: x86_64
     format_overrides:
@@ -47,8 +48,9 @@ archives:
         format: zip
     format: binary
   - id: homebrew
-    name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     replacements:
+      386: i386
       darwin: macos
       amd64: x86_64
     format: zip
@@ -57,10 +59,11 @@ brews:
   - name: mpdq
     tap:
       owner: jfreeland
-      name: mpdq
+      name: homebrew-tap
     folder: Formula
     homepage: https://github.com/jfreeland/mpdq
     description: "A cli tool to parse MPEG-DASH manifests"
+    url_template: "https://github.com/jfreeland/mpdq/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
 checksum:
   disable: true
