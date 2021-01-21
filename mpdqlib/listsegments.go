@@ -19,8 +19,7 @@ func ListSegments(manifest *mpd.MPD, watch bool, lastTime, mpdURL, representatio
 		watchDynamicSegments(manifest, r, mpdURL, lastTime)
 		//fmt.Println("forgot how to do this")
 	} else if *manifest.Type == "static" {
-		//listStaticSegments(manifest, r, mpdBase)
-		fmt.Println("forgot how to do this")
+		listStaticSegments(manifest, r, mpdBase, true)
 	} else {
 		fmt.Printf("i have no idea what i'm doing with this manifest type: %v\n", *manifest.Type)
 	}
@@ -132,6 +131,76 @@ func listDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string
 		}
 	}
 	return allSegments
+}
+
+// TODO: I haven't touched this in a bit.  It probably needs a lot of work.
+func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string, print bool) {
+	var (
+		allSegments, periodSegments []segment
+		nextPeriodStartTime         time.Time
+		previousSegmentEndTime      time.Time
+	)
+	table := getTable()
+	if print {
+		printHeader(table)
+		defer table.Render()
+	}
+	defer table.Render()
+
+	mpdBase = getMPDBase(manifest.BaseURL, mpdBase)
+	now := time.Now().UTC()
+	availabilityStartTime := getAvailabilityStartTime(*manifest.AvailabilityStartTime)
+
+	for pidx, period := range manifest.Periods {
+		rowColor := getRowColor(pidx)
+		periodStartTime := availabilityStartTime.Add(time.Duration(*period.Start))
+		var sTemplate *mpd.SegmentTemplate
+		for _, as := range period.AdaptationSets {
+			if as.SegmentTemplate != nil {
+				sTemplate = as.SegmentTemplate
+			}
+			for _, rep := range as.Representations {
+				if r.ID != *rep.ID {
+					continue
+				}
+				if rep.SegmentTemplate != nil {
+					sTemplate = rep.SegmentTemplate
+				}
+				if sTemplate.SegmentTimeline == nil {
+					periodSegments = parseSegmentTemplateNoTimeline(templateOptions{
+						pidx:                   pidx,
+						period:                 period,
+						rep:                    rep,
+						mpdBase:                mpdBase,
+						now:                    now,
+						availabilityStartTime:  availabilityStartTime,
+						periodStartTime:        periodStartTime,
+						nextPeriodStartTime:    nextPeriodStartTime,
+						previousSegmentEndTime: &previousSegmentEndTime,
+						sTemplate:              sTemplate,
+					})
+				} else {
+					periodSegments = parseSegmentTemplateWithTimeline(templateOptions{
+						pidx:                   pidx,
+						period:                 period,
+						rep:                    rep,
+						mpdBase:                mpdBase,
+						now:                    now,
+						availabilityStartTime:  availabilityStartTime,
+						periodStartTime:        periodStartTime,
+						previousSegmentEndTime: &previousSegmentEndTime,
+						sTemplate:              sTemplate,
+					})
+				}
+			}
+			for _, segment := range periodSegments {
+				allSegments = append(allSegments, segment)
+				if print {
+					printSegment(table, rowColor, segment)
+				}
+			}
+		}
+	}
 }
 
 func parseSegmentTemplateWithTimeline(opts templateOptions) []segment {
@@ -266,53 +335,3 @@ func watchDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdURL, lastT
 		table.ClearRows()
 	}
 }
-
-// TODO: I haven't touched this in a bit.  It probably needs a lot of work.
-// func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string) {
-// 	table := tablewriter.NewWriter(os.Stdout)
-// 	table.SetAutoWrapText(false)
-// 	table.SetHeader([]string{"period", "presentation time offset", "duration", "number", "path"})
-// 	defer table.Render()
-
-// 	duration, err := mpd.ParseDuration(*manifest.MediaPresentationDuration)
-// 	if err != nil {
-// 		fmt.Printf("err: %v\n", err)
-// 	}
-// 	durationS := int(duration.Seconds())
-// 	var countedS int
-
-// 	var segNum int
-// 	for _, period := range manifest.Periods {
-// 		var sTemplate *mpd.SegmentTemplate
-// 		for _, as := range period.AdaptationSets {
-// 			if as.SegmentTemplate != nil {
-// 				sTemplate = as.SegmentTemplate
-// 			}
-// 			for _, rep := range as.Representations {
-// 				if r.ID != *rep.ID {
-// 					continue
-// 				}
-// 				if rep.SegmentTemplate != nil {
-// 					sTemplate = rep.SegmentTemplate
-// 				}
-// 				if sTemplate.StartNumber != nil {
-// 					segNum = int(*sTemplate.StartNumber)
-// 				} else {
-// 					segNum = 1
-// 				}
-// 				// TODO: find examples of and, figure out how to, handle multiperiod static manifests
-// 				if len(manifest.Periods) == 1 {
-// 					for countedS <= durationS {
-// 						segTime := *sTemplate.Duration / *sTemplate.Timescale
-// 						path := cleanFilePath(mpdBase, *sTemplate.Media, *rep.ID, segNum)
-// 						rowColor := tablewriter.Colors{tablewriter.Normal}
-// 						data := []string{period.ID, strconv.Itoa(countedS), strconv.Itoa(int(segTime)) + "s", strconv.Itoa(int(segNum)), path}
-// 						table.Rich(data, []tablewriter.Colors{rowColor, rowColor, rowColor, rowColor, rowColor})
-// 						countedS += int(segTime)
-// 						segNum++
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// }

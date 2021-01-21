@@ -17,10 +17,6 @@ For the time being I've removed all support for static manifests as I don't deal
 ## Installation
 
 ```sh
-go install github.com/jfreeland/mpdq
-
-or
-
 go get -u github.com/jfreeland/mpdq
 ```
 
@@ -122,3 +118,9 @@ https://livesim.dashif.org/livesim/utc_head/testpic_2s/Manifest.mpd
 https://livesim.dashif.org/livesim/utc_ntp/testpic_2s/Manifest.mpd
 https://livesim.dashif.org/livesim/utc_sntp/testpic_2s/Manifest.mpd
 ```
+
+## Other References
+
+- https://dashif-documents.azurewebsites.net/DASH-IF-IOP/master/DASH-IF-IOP.html#svc-live
+- https://dashif-documents.azurewebsites.net/Guidelines-TimingModel/master/Guidelines-TimingModel.html
+- https://github.com/Dash-Industry-Forum/Guidelines-TimingModel
