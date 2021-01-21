@@ -20,6 +20,8 @@ builds:
       - amd64
       - arm
       - arm64
+    goarm:
+      - 7
     ignore:
       - goos: darwin
         goarch: 386
@@ -43,7 +45,7 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
-    format: tar.xz
+    format: binary
   - id: homebrew
     name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     replacements:
