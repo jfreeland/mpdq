@@ -42,7 +42,7 @@ builds:
       - darwin
     goarch:
       - 386
-      - arm64
+      - amd64
     main: ./main.go
     ldflags:
       - -s -w
