@@ -61,10 +61,6 @@ archives:
     format: binary
   - id: homebrew
     builds: [homebrew]
-    replacements:
-      386: i386
-      darwin: macos
-      amd64: x86_64
     format: tar.gz
     format_overrides:
       - goos: windows
