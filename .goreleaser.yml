@@ -42,7 +42,7 @@ builds:
       - darwin
     goarch:
       - 386
-      - amd64
+      - arm64
     main: ./main.go
     ldflags:
       - -s -w
@@ -51,20 +51,20 @@ archives:
   - id: default
     builds: [default]
     name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    #replacements:
-    #  386: i386
-    #  darwin: macos
-    #  amd64: x86_64
+    replacements:
+      386: i386
+      darwin: macos
+      amd64: x86_64
     format_overrides:
       - goos: windows
         format: zip
     format: binary
   - id: homebrew
     builds: [homebrew]
-    #replacements:
-    #  386: i386
-    #  darwin: macos
-    #  amd64: x86_64
+    replacements:
+      386: i386
+      darwin: macos
+      amd64: x86_64
     format: tar.gz
     format_overrides:
       - goos: windows

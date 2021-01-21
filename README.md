@@ -17,6 +17,13 @@ For the time being I've removed all support for static manifests as I don't deal
 ## Installation
 
 ```sh
+brew tap jfreeland/tap
+brew install jfreeland/tap/mpdq
+```
+
+or
+
+```sh
 go get -u github.com/jfreeland/mpdq
 ```
 
