@@ -1,18 +1,28 @@
+project_name: mpdq
+
 before:
   hooks:
     - go mod download
+
 builds:
   - env:
       - CGO_ENABLED=0
-    goos:
-      - linux
-      - windows
-      - darwin
-    goarch:
-      - amd64
-      - 386
+      - GO111MODULE=on
+    id: mpdq
     binary: mpdq
     mod_timestamp: '{{ .CommitTimestamp }}'
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - 7
+
 archives:
   - replacements:
       darwin: macos
@@ -21,6 +31,7 @@ archives:
         format: zip
     format: tar.xz
     name_template: "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}"
+
 brews:
   - name: mpdq
     tap:
@@ -29,7 +40,9 @@ brews:
     folder: Formula
     homepage: https://github.com/jfreeland/mpdq
     description: "A cli tool to parse MPEG-DASH manifests"
+
 checksum:
   disable: true
+
 changelog:
   skip: true
