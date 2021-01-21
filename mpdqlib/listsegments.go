@@ -139,6 +139,7 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 		allSegments, periodSegments []segment
 		nextPeriodStartTime         time.Time
 		previousSegmentEndTime      time.Time
+		timeBetweenPeriods          time.Duration
 	)
 	table := getTable()
 	if print {
@@ -153,6 +154,16 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 		rowColor := getRowColor(pidx)
 		periodStartTime := now.Add(time.Duration(*period.Start))
 		var sTemplate *mpd.SegmentTemplate
+		if pidx != 0 {
+			timeBetweenPeriods = periodStartTime.Sub(previousSegmentEndTime)
+			gapSegment, gap := checkForGap(table, pidx, period.ID, timeBetweenPeriods, previousSegmentEndTime)
+			if gap {
+				if print {
+					printSegment(table, tablewriter.Color(tablewriter.FgRedColor), gapSegment)
+				}
+				allSegments = append(allSegments, gapSegment)
+			}
+		}
 		for _, as := range period.AdaptationSets {
 			if as.SegmentTemplate != nil {
 				sTemplate = as.SegmentTemplate
