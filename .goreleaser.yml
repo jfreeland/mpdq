@@ -70,12 +70,19 @@ archives:
       - goos: windows
         format: zip
 
+release:
+  ids: ["default", "homebrew"]
+  prerelease: auto
+
 brews:
   - ids: ["homebrew"]
     name: mpdq
     tap:
       owner: jfreeland
       name: homebrew-tap
+    commit_author:
+      name: "Joey Freeland"
+      email: "joey@free.land"
     folder: Formula
     homepage: https://github.com/jfreeland/mpdq
     description: "A cli tool to parse MPEG-DASH manifests"
