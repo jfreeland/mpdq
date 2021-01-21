@@ -5,12 +5,11 @@ before:
     - go mod download
 
 builds:
-  - env:
+  - id: default
+    binary: mpdq
+    env:
       - CGO_ENABLED=0
       - GO111MODULE=on
-    id: mpdq
-    binary: mpdq
-    mod_timestamp: '{{ .CommitTimestamp }}'
     goos:
       - darwin
       - linux
@@ -36,27 +35,44 @@ builds:
     main: ./main.go
     ldflags:
       - -s -w
+  - id: homebrew
+    binary: mpdq
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - 386
+      - amd64
+    main: ./main.go
+    ldflags:
+      - -s -w
 
 archives:
-  - name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    replacements:
-      386: i386
-      darwin: macos
-      amd64: x86_64
+  - id: default
+    builds: [default]
+    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    #replacements:
+    #  386: i386
+    #  darwin: macos
+    #  amd64: x86_64
     format_overrides:
       - goos: windows
         format: zip
     format: binary
   - id: homebrew
-    name_template: "{{ .Binary }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    replacements:
-      386: i386
-      darwin: macos
-      amd64: x86_64
-    format: zip
+    builds: [homebrew]
+    #replacements:
+    #  386: i386
+    #  darwin: macos
+    #  amd64: x86_64
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
 
 brews:
-  - name: mpdq
+  - ids: ["homebrew"]
+    name: mpdq
     tap:
       owner: jfreeland
       name: homebrew-tap
