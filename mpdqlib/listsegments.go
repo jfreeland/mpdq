@@ -145,15 +145,13 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 		printHeader(table)
 		defer table.Render()
 	}
-	defer table.Render()
 
 	mpdBase = getMPDBase(manifest.BaseURL, mpdBase)
 	now := time.Now().UTC()
-	availabilityStartTime := getAvailabilityStartTime(*manifest.AvailabilityStartTime)
 
 	for pidx, period := range manifest.Periods {
 		rowColor := getRowColor(pidx)
-		periodStartTime := availabilityStartTime.Add(time.Duration(*period.Start))
+		periodStartTime := now.Add(time.Duration(*period.Start))
 		var sTemplate *mpd.SegmentTemplate
 		for _, as := range period.AdaptationSets {
 			if as.SegmentTemplate != nil {
@@ -173,7 +171,7 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 						rep:                    rep,
 						mpdBase:                mpdBase,
 						now:                    now,
-						availabilityStartTime:  availabilityStartTime,
+						availabilityStartTime:  now,
 						periodStartTime:        periodStartTime,
 						nextPeriodStartTime:    nextPeriodStartTime,
 						previousSegmentEndTime: &previousSegmentEndTime,
@@ -186,7 +184,7 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 						rep:                    rep,
 						mpdBase:                mpdBase,
 						now:                    now,
-						availabilityStartTime:  availabilityStartTime,
+						availabilityStartTime:  now,
 						periodStartTime:        periodStartTime,
 						previousSegmentEndTime: &previousSegmentEndTime,
 						sTemplate:              sTemplate,
