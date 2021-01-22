@@ -1,5 +1,7 @@
 # mpdq
 
+This was inspired by https://github.com/soldiermoth/hlsq/.
+
 ## If you installed prior to January 16
 
 Please `rm -rf $GO_SRC_DIR/github.com/jfreeland/mpdq` and reinstall. I'm a moron and thought I'd clean up after myself and rewrite my history to clean up some of my nastiness, not realizing it would break updating. That won't happen again. The history of my nasty code will live on.
