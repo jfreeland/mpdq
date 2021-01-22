@@ -121,12 +121,13 @@ func listDynamicSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string
 						sTemplate:              sTemplate,
 					})
 				}
-				for _, segment := range periodSegments {
-					allSegments = append(allSegments, segment)
-					if print {
-						printSegment(table, rowColor, segment)
-					}
-				}
+
+			}
+		}
+		for _, segment := range periodSegments {
+			allSegments = append(allSegments, segment)
+			if print {
+				printSegment(table, rowColor, segment)
 			}
 		}
 	}
@@ -202,11 +203,11 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 					})
 				}
 			}
-			for _, segment := range periodSegments {
-				allSegments = append(allSegments, segment)
-				if print {
-					printSegment(table, rowColor, segment)
-				}
+		}
+		for _, segment := range periodSegments {
+			allSegments = append(allSegments, segment)
+			if print {
+				printSegment(table, rowColor, segment)
 			}
 		}
 	}
@@ -215,40 +216,37 @@ func listStaticSegments(manifest *mpd.MPD, r ListRepresentation, mpdBase string,
 func parseSegmentTemplateWithTimeline(opts templateOptions) []segment {
 	var (
 		currentTime time.Time
-		duration    uint64
+		duration    float64
 		segNum      int
 		segments    []segment
 	)
 	sTimeline := opts.sTemplate.SegmentTimeline
+	sTimescale := uint64(*opts.sTemplate.Timescale)
 	segNum = int(*opts.sTemplate.StartNumber)
-	for _, s := range sTimeline.Segments {
+	for sidx, s := range sTimeline.Segments {
 		repeat := getRepeatCount(s.RepeatCount)
 		for idx := 0; idx <= repeat; idx++ {
-			sTimescale := uint64(*opts.sTemplate.Timescale)
-			expectedDuration := s.Duration / sTimescale * uint64(time.Second)
+			duration = float64(s.Duration) / float64(sTimescale) * float64(time.Second)
+			expectedDuration := float64(s.Duration) / float64(sTimescale) * float64(time.Second)
 			durationColor := getDurationColor(duration, expectedDuration, opts.pidx)
-			duration = s.Duration / sTimescale * uint64(time.Second)
-			if idx == 0 {
-				// TODO: I think this is right?  Needs to be validated.
-				// https://github.com/google/shaka-player/blob/master/docs/design/dash-manifests.md#calculating-presentation-times
-				currentTime = opts.periodStartTime.Add(time.Duration((*s.StartTime - *opts.sTemplate.PresentationTimeOffset) / sTimescale * uint64(time.Second)))
-			} else {
-				currentTime = currentTime.Add(time.Duration(duration))
+			if sidx == 0 && idx == 0 {
+				currentTime = opts.periodStartTime
 			}
-			durationS := strconv.FormatUint(s.Duration/uint64(*opts.sTemplate.Timescale), 10) + "s"
+			durationS := strconv.FormatFloat(float64(s.Duration)/float64(*opts.sTemplate.Timescale), 'f', 3, 64) + "s"
 			path := cleanFilePath(opts.mpdBase, *opts.sTemplate.Media, *opts.rep.ID, int(segNum))
 			endTime := currentTime.Add(time.Duration(duration))
 			*opts.previousSegmentEndTime = endTime
 			segments = append(segments, segment{
 				durationC: durationColor,
 				durationS: durationS,
-				endTime:   endTime.Round(time.Second),
+				endTime:   endTime,
 				number:    strconv.Itoa(int(segNum)),
 				path:      path,
 				pidx:      opts.pidx,
 				period:    opts.period.ID,
-				startTime: currentTime.Round(time.Second),
+				startTime: currentTime,
 			})
+			currentTime = endTime
 			segNum++
 		}
 	}

@@ -72,7 +72,7 @@ func getRowColor(pidx int) []int {
 	return tablewriter.Colors{tablewriter.Normal}
 }
 
-func getDurationColor(duration uint64, expectedDuration uint64, pidx int) []int {
+func getDurationColor(duration, expectedDuration float64, pidx int) []int {
 	c := getRowColor(pidx)
 	if duration != expectedDuration {
 		return tablewriter.Colors{tablewriter.FgRedColor}
@@ -155,13 +155,13 @@ func checkForGap(t *tablewriter.Table, pidx int, periodID string, timeBetweenPer
 	if timeBetweenPeriods > time.Duration(500*time.Millisecond) {
 		gapSegment := segment{
 			durationC: tablewriter.Color(tablewriter.FgRedColor),
-			durationS: timeBetweenPeriods.String(),
-			endTime:   previousSegmentEndTime.Add(time.Duration(timeBetweenPeriods)).Round(time.Second),
+			durationS: timeBetweenPeriods.Round(time.Millisecond).String(),
+			endTime:   previousSegmentEndTime.Add(time.Duration(timeBetweenPeriods)),
 			number:    fmt.Sprintf("GAP%v", periodID),
 			path:      "possible gap detected",
 			pidx:      pidx,
 			period:    periodID,
-			startTime: previousSegmentEndTime.Round(time.Second),
+			startTime: previousSegmentEndTime,
 		}
 		return gapSegment, true
 	}
@@ -201,7 +201,14 @@ func printHeader(t *tablewriter.Table) {
 }
 
 func printSegment(t *tablewriter.Table, color []int, segment segment) {
-	data := []string{segment.period, segment.number, segment.startTime.String(), segment.durationS, segment.endTime.String(), segment.path}
+	timeLayout := "2006-01-02 15:04:05.000 UTC"
+	data := []string{
+		segment.period,
+		segment.number,
+		segment.startTime.Format(timeLayout),
+		segment.durationS,
+		segment.endTime.Format(timeLayout),
+		segment.path}
 	if t != nil {
 		t.Rich(data, []tablewriter.Colors{color, color, color, segment.durationC, color, color})
 	}
