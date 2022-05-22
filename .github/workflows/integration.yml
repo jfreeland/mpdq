@@ -1,0 +1,39 @@
+---
+name: integration tests
+on:
+  pull_request:
+
+jobs:
+  integratino:
+    name: simple integration test
+    strategy:
+      matrix:
+        go-verison: [1.17]
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: test
+        run: |
+          echo $PATH
+
+      - name: Build
+        run: |
+          echo $PATH && \
+          go build -o mpdq main.go && \
+          ls -la
+
+      - name: Test diagnostics
+        run: |
+          echo $PATH && \
+          ./mpdq -h
